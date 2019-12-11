@@ -16,4 +16,4 @@ app.use(cors())
 const gamesRouter = require('./routes/games')
 app.use('/games', gamesRouter)
 
-app.listen(8080, () => console.log('Server started!'))
+app.listen(8000, () => console.log('Server started!'))

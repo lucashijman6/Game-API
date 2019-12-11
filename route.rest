@@ -1,8 +1,8 @@
-GET http://localhost:8080/games
+GET http://localhost:8000/games
 ###
-GET http://localhost:8080/games/
+GET http://localhost:8000/games/
 ###
-POST http://localhost:8080/games
+POST http://localhost:8000/games
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
     "release":""
 }
 ###
-PATCH http://localhost:8080/games/
+PATCH http://localhost:8000/games/
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
     "release":""
 }
 ###
-PUT http://localhost:8080/games/
+PUT http://localhost:8000/games/
 Content-Type: application/json
 
 {
@@ -32,8 +32,8 @@ Content-Type: application/json
     "release":""
 }
 ###
-DELETE http://localhost:8080/games/
+DELETE http://localhost:8000/games/
 ###
-OPTIONS http://localhost:8080/games
+OPTIONS http://localhost:8000/games
 ###
-OPTIONS http://localhost:8080/games/5de4318f589043252c8f2de1
+OPTIONS http://localhost:8000/games/
