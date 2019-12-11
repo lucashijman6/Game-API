@@ -96,7 +96,7 @@ router.delete('/:id', getGame, async (req, res) => {
     }
 })
 
-/*router.options('/', async (req, res) => {
+router.options('/', async (req, res) => {
     try {
         await options()
     } catch(err) {
@@ -110,7 +110,7 @@ router.options('/:id', getGame, async (req, res) => {
     } catch(err) {
         res.status(500).json({ message: err.message })
     }
-})*/
+})
 
 async function getGame(req, res, next) {
     let game
