@@ -3,6 +3,7 @@ const router = express.Router()
 const Game = require('../models/game')
 
 router.get('/', async (req, res) => {
+    //Accept: application/json
     try {
         const games = await Game.find()
         let items = []
@@ -87,7 +88,7 @@ router.put('/:id', getGame, async (req, res) => {
     }
 })
 
-/*router.delete('/:id', getGame, async (req, res) => {
+router.delete('/:id', getGame, async (req, res) => {
     try {
         await res.game.remove()
         res.json({ message: 'Game was deleted' })
@@ -97,20 +98,11 @@ router.put('/:id', getGame, async (req, res) => {
 })
 
 router.options('/', async (req, res) => {
-    Allow: 
-    try {
-        await options()
-    } catch(err) {
-        res.status(500).json({ message: err.message })
-    }
-})*/
+    Allow: GET, POST, HEAD, OPTIONS
+})
 
 router.options('/:id', getGame, async (req, res) => {
-    try {
-        await options()
-    } catch(err) {
-        res.status(500).json({ message: err.message })
-    }
+    Allow: GET, HEAD, PUT, PATCH, DELETE, OPTIONS
 })
 
 async function getGame(req, res, next) {
