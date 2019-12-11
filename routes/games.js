@@ -8,12 +8,17 @@ router.get('/', async (req, res) => {
         let items = []
         for (let i = 0; i < games.length; i++) {
             let game = games[i].toJSON()
-            game._link = {href: "http://" + req.headers.host + "/games/" + game._id}
+            game._links = {
+                self: {href: "http://" + req.headers.host + "/games/" + game._id},
+                collection: {href: "http://" + req.headers.host + "/games"}
+            }
             items.push(game)
         }
         let collection = {
             items: items,
-            _links: {href: "http://" + req.headers.host + "/games"},
+            _links: {
+                self: {href: "http://" + req.headers.host + "/games"}
+            },
             pagination: {geen: "pagination"}
         }
         res.json(collection)
@@ -23,11 +28,14 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', getGame, (req, res) => {
-    let specificGame = {
-        
+    let collection = {
+        item: res.game,
+        _links: {
+            self: {href: "http://" + req.headers.host + "/games/" + res.game._id},
+            collection: {href: "http://" + req.headers.host + "/games"}
+        }
     }
-    // res.json(specificGame)
-    res.json(res.game)
+    res.json(collection)
 })
 
 router.post('/', async (req, res) => {
@@ -87,6 +95,22 @@ router.delete('/:id', getGame, async (req, res) => {
         res.status(500).json({ message: err.message })
     }
 })
+
+/*router.options('/', async (req, res) => {
+    try {
+        await options()
+    } catch(err) {
+        res.status(500).json({ message: err.message })
+    }
+})
+
+router.options('/:id', getGame, async (req, res) => {
+    try {
+        await options()
+    } catch(err) {
+        res.status(500).json({ message: err.message })
+    }
+})*/
 
 async function getGame(req, res, next) {
     let game

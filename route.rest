@@ -22,12 +22,6 @@ Content-Type: application/json
     "release":""
 }
 ###
-DELETE http://localhost:8000/games/
-###
-OPTIONS http://localhost:8000/games
-###
-OPTIONS http://localhost:8000/games/
-###
 PUT http://localhost:8000/games/
 Content-Type: application/json
 
@@ -37,3 +31,11 @@ Content-Type: application/json
     "console":"",
     "release":""
 }
+###
+DELETE http://localhost:8000/games/
+###
+OPTIONS http://localhost:8000/games
+Allow: GET, HEAD, POST
+###
+OPTIONS http://localhost:8000/games/5de4318f589043252c8f2de1
+Allow: GET, HEAD, PATCH, PUT, DELETE
