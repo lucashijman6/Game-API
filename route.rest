@@ -1,0 +1,39 @@
+GET http://localhost:8000/games
+###
+GET http://localhost:8000/games/
+###
+POST http://localhost:8000/games
+Content-Type: application/json
+
+{
+    "name":"",
+    "company":"",
+    "console":"",
+    "release":""
+}
+###
+PATCH http://localhost:8000/games/5ded0f8612638420347ad69f
+Content-Type: application/json
+
+{
+    "name":"",
+    "company":"",
+    "console":"",
+    "release":""
+}
+###
+DELETE http://localhost:8000/games/
+###
+OPTIONS http://localhost:8000/games
+###
+OPTIONS http://localhost:8000/games/
+###
+PUT http://localhost:8000/games/
+Content-Type: application/json
+
+{
+    "name":"",
+    "company":"",
+    "console":"",
+    "release":""
+}
