@@ -87,7 +87,7 @@ router.put('/:id', getGame, async (req, res) => {
     }
 })
 
-router.delete('/:id', getGame, async (req, res) => {
+/*router.delete('/:id', getGame, async (req, res) => {
     try {
         await res.game.remove()
         res.json({ message: 'Game was deleted' })
@@ -97,12 +97,13 @@ router.delete('/:id', getGame, async (req, res) => {
 })
 
 router.options('/', async (req, res) => {
+    Allow: 
     try {
         await options()
     } catch(err) {
         res.status(500).json({ message: err.message })
     }
-})
+})*/
 
 router.options('/:id', getGame, async (req, res) => {
     try {
