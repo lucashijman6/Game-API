@@ -23,9 +23,10 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', getGame, (req, res) => {
-    let collection = {
+    let specificGame = {
         
     }
+    // res.json(specificGame)
     res.json(res.game)
 })
 
