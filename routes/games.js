@@ -3,7 +3,6 @@ const router = express.Router()
 const Game = require('../models/game')
 
 router.get('/', async (req, res) => {
-    //Accept: application/json
     try {
         const games = await Game.find()
         let items = []
@@ -76,13 +75,14 @@ router.patch('/:id', getGame, async (req, res) => {
 })
 
 router.put('/:id', getGame, async (req, res) => {
+    res.header('Content-Type', 'application/json')
     res.game.name = req.body.name
     res.game.company = req.body.company
     res.game.console = req.body.console
     res.game.release = req.body.release
     try {
         const updatedGame = await res.game.save()
-        res.json(updatedGame)
+        res.status(200).json(updatedGame)
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
@@ -91,18 +91,25 @@ router.put('/:id', getGame, async (req, res) => {
 router.delete('/:id', getGame, async (req, res) => {
     try {
         await res.game.remove()
-        res.json({ message: 'Game was deleted' })
+        res.status(204).json({ message: 'Game was deleted' })
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
 
-router.options('/', async (req, res) => {
-    Allow: GET, POST, HEAD, OPTIONS
+router.options('/', (req, res, next) => {
+    controlMessage()
+    res.header('Access-Control-Allow-Origin', "*")
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+    next()
 })
 
-router.options('/:id', getGame, async (req, res) => {
-    Allow: GET, HEAD, PUT, PATCH, DELETE, OPTIONS
+router.options('/:id', getGame, (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', "*")
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+    next()
 })
 
 async function getGame(req, res, next) {
@@ -113,10 +120,14 @@ async function getGame(req, res, next) {
             return res.status(404).json({ message: 'Cannot find game!' })
         }
     } catch (err) {
-        return res.status(500).json({message: err.message })
+        return res.status(500).json({ message: err.message })
     }
     res.game = game
     next()
+}
+
+function controlMessage() {
+    console.log("Controlebericht!")
 }
 
 module.exports = router
