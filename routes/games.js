@@ -4,6 +4,9 @@ const Game = require('../models/game')
 const cors = require('cors')
 
 router.get('/', async (req, res) => {
+    res.header('Allow', 'GET, HEAD, POST, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS')
     try {
         const games = await Game.find()
         let items = []
@@ -29,6 +32,9 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', getGame, (req, res) => {
+    res.header('Allow', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
     let collection = {
         item: res.game,
         _links: {
@@ -40,6 +46,7 @@ router.get('/:id', getGame, (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
     //res.header('Content-Type', "application/json")
     const game = new Game({
@@ -57,6 +64,7 @@ router.post('/', async (req, res) => {
 })
 
 router.patch('/:id', getGame, async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
     //res.header('Content-Type', "application/json")
     if (req.body.name != null) {
@@ -80,6 +88,7 @@ router.patch('/:id', getGame, async (req, res) => {
 })
 
 router.put('/:id', getGame, async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
     //res.header('Content-Type', "application/json")
     res.game.name = req.body.name
@@ -105,12 +114,14 @@ router.delete('/:id', getGame, async (req, res) => {
 
 router.options('/', (req, res, next) => {
     controlMessage()
+    res.header('Allow', 'GET, HEAD, POST, OPTIONS')
     res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
 })
 
 router.options('/:id', getGame, (req, res, next) => {
+    res.header('Allow', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
