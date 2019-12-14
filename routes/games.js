@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
             },
             pagination: {geen: "pagination"}
         }
-        res.json(collection)
+        res.status(200).json(collection)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -35,7 +35,7 @@ router.get('/:id', getGame, (req, res) => {
             collection: {href: "http://" + req.headers.host + "/games"}
         }
     }
-    res.json(collection)
+    res.status(200).json(collection)
 })
 
 router.post('/', async (req, res) => {
@@ -68,7 +68,7 @@ router.patch('/:id', getGame, async (req, res) => {
     }
     try {
         const updatedGame = await res.game.save()
-        res.json(updatedGame)
+        res.status(200).json(updatedGame)
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
