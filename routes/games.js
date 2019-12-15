@@ -3,11 +3,11 @@ const router = express.Router()
 const Game = require('../models/game')
 const cors = require('cors')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     //controlMessage()
-    res.header('Allow', 'GET, HEAD, POST, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-    res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS')
+    res.header('Allow', 'GET, POST, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     try {
         const games = await Game.find()
         let items = []
@@ -30,14 +30,18 @@ router.get('/', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
+    if(req.header('Accept') === "application/json") {
+        next()
+    } else {
+        return { message: "Accept header niet ok!" }
+    }
 })
 
-router.get('/:id', getGame, (req, res) => {
+router.get('/:id', getGame, (req, res, next) => {
     //controlMessage()
-    res.header('Allow', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-    res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
-    res.header('Content-Type', "application/json")
+    res.header('Allow', 'GET, PUT, PATCH, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, PATCH, DELETE, OPTIONS')
     let collection = {
         item: res.game,
         _links: {
@@ -46,13 +50,17 @@ router.get('/:id', getGame, (req, res) => {
         }
     }
     res.status(200).json(collection)
+    if(req.header('Accept') === "application/json") {
+        next()
+    } else {
+        controlMessage() // return accept header is niet ok ofzo
+    }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     //controlMessage()
-    res.header('Content-Type', "application/json")
     res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     const game = new Game({
         name: req.body.name,
         company: req.body.company,
@@ -65,13 +73,22 @@ router.post('/', async (req, res) => {
     } catch (err) {
         res.status(400).json({message: err.message})
     }
+    if(req.header('Accept') === "application/json") {
+        next()
+    } else {
+        return { message: "Accept header niet ok!" }
+    }
+    if(req.header('Content-Type') === "application/json") {
+        next()
+    } else {
+        return { message: "Content-Type header niet ok!" }
+    }
 })
 
-router.patch('/:id', getGame, async (req, res) => {
+router.patch('/:id', getGame, async (req, res, next) => {
     //controlMessage()
     res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-    res.header('Content-Type', "application/json")
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     if (req.body.name != null) {
         res.game.name = req.body.name
     }
@@ -90,26 +107,48 @@ router.patch('/:id', getGame, async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
+    if(req.header('Accept') === "application/json") {
+        next()
+    } else {
+        return { message: "Accept header niet ok!" }
+    }
+    if(req.header('Content-Type') === "application/json") {
+        next()
+    } else {
+        controlMessage() // return content-type header is niet ok ofzo
+    }
 })
 
-router.put('/:id', getGame, async (req, res) => {
-    //controlMessage()
+router.put('/:id', getGame, async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-    res.header('Content-Type', "application/json")
-    res.game.name = req.body.name
-    res.game.company = req.body.company
-    res.game.console = req.body.console
-    res.game.release = req.body.release
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
+        res.game.name = req.body.name
+        res.game.company = req.body.company
+        res.game.console = req.body.console
+        res.game.release = req.body.release
+    } else {
+        return res.json({ message: "Values can't be empty!"})
+    }
     try {
         const updatedGame = await res.game.save()
         res.status(200).json(updatedGame)
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
+    if(req.header('Accept') === "application/json") {
+        next()
+    } else {
+        return { message: "Accept header niet ok!" }
+    }
+    if(req.header('Content-Type') === "application/json") {
+        next()
+    } else {
+        return { message: "Content-Type header niet ok!" }
+    }
 })
 
-router.delete('/:id', getGame, async (req, res) => {
+router.delete('/:id', getGame, async (req, res, next) => {
     //controlMessage()
     try {
         await res.game.remove()
@@ -117,22 +156,6 @@ router.delete('/:id', getGame, async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
-})
-
-router.options('/', (req, res, next) => {
-    controlMessage()
-    res.header('Allow', 'GET, HEAD, POST, OPTIONS')
-    res.header('Access-Control-Allow-Origin', "*")
-    res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-})
-
-router.options('/:id', getGame, (req, res, next) => {
-    controlMessage()
-    res.header('Allow', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Origin', "*")
-    res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
 })
 
 async function getGame(req, res, next) {
@@ -148,6 +171,22 @@ async function getGame(req, res, next) {
     res.game = game
     next()
 }
+
+router.options('/', (req, res, next) => {
+    controlMessage()
+    res.header('Allow', 'GET, HEAD, POST, OPTIONS')
+    res.header('Access-Control-Allow-Origin', "*")
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+})
+
+router.options('/:id', getGame, (req, res, next) => {
+    controlMessage()
+    res.header('Allow', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Origin', "*")
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, PATCH, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+})
 
 function controlMessage() {
     console.log("Controlebericht!")
