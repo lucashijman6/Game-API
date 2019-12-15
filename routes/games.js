@@ -53,7 +53,7 @@ router.get('/:id', getGame, (req, res, next) => {
     if(req.header('Accept') === "application/json") {
         next()
     } else {
-        controlMessage() // return accept header is niet ok ofzo
+        return { message: "Accept header niet ok!" }
     }
 })
 
@@ -115,7 +115,7 @@ router.patch('/:id', getGame, async (req, res, next) => {
     if(req.header('Content-Type') === "application/json") {
         next()
     } else {
-        controlMessage() // return content-type header is niet ok ofzo
+        return { message: "Content-Type header niet ok!" }
     }
 })
 
