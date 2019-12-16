@@ -167,20 +167,30 @@ async function getGame(req, res, next) {
 }
 
 controlMessage(1)
-router.options('/', (req, res) => {
+router.options('/', function(req, res) {
     controlMessage(4)
-    res.header('Allow', 'GET, POST, OPTIONS')
-    res.header('Access-Control-Allow-Origin', "*")
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    let headers = {}
+    headers['Allow'] = 'GET, POST, OPTIONS'
+    headers['Access-Control-Allow-Origin'] = "*"
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    headers['Content-Length'] = 0
+    headers['Content-Type'] = 'text/html'
+    res.writeHead(200, headers)
+    res.send()
 })
 
 router.options('/:id', getGame, (req, res) => {
     controlMessage(5)
-    res.header('Allow', 'GET, PUT, PATCH, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Origin', "*")
-    res.header('Access-Control-Allow-Methods', 'GET, PUT, PATCH, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    let headers = {}
+    headers['Allow'] = 'GET, PUT, PATCH, DELETE, OPTIONS'
+    headers['Access-Control-Allow-Origin'] = "*"
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
+    headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, DELETE, OPTIONS'
+    headers['Content-Length'] = 0
+    headers['Content-Type'] = 'text/html'
+    res.writeHead(200, headers)
+    res.send()
 })
 
 function controlMessage(a) {
