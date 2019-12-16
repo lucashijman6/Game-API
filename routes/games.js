@@ -1,10 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const Game = require('../models/game')
-const cors = require('cors')
 
 router.get('/', async (req, res, next) => {
-    //controlMessage()
     res.header('Allow', 'GET, POST, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
@@ -38,7 +36,6 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:id', getGame, (req, res, next) => {
-    //controlMessage()
     res.header('Allow', 'GET, PUT, PATCH, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     res.header('Access-Control-Allow-Methods', 'GET, PUT, PATCH, DELETE, OPTIONS')
@@ -58,7 +55,6 @@ router.get('/:id', getGame, (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-    //controlMessage()
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     const game = new Game({
@@ -86,7 +82,6 @@ router.post('/', async (req, res, next) => {
 })
 
 router.patch('/:id', getGame, async (req, res, next) => {
-    //controlMessage()
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     if (req.body.name != null) {
@@ -149,7 +144,6 @@ router.put('/:id', getGame, async (req, res, next) => {
 })
 
 router.delete('/:id', getGame, async (req, res, next) => {
-    //controlMessage()
     try {
         await res.game.remove()
         res.status(204).json({ message: 'Game was deleted' })
@@ -172,24 +166,25 @@ async function getGame(req, res, next) {
     next()
 }
 
-router.options('/', (req, res, next) => {
-    controlMessage()
-    res.header('Allow', 'GET, HEAD, POST, OPTIONS')
+controlMessage(1)
+router.options('/', (req, res) => {
+    controlMessage(4)
+    res.header('Allow', 'GET, POST, OPTIONS')
     res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 })
 
-router.options('/:id', getGame, (req, res, next) => {
-    controlMessage()
-    res.header('Allow', 'GET, HEAD, PUT, PATCH, DELETE, OPTIONS')
+router.options('/:id', getGame, (req, res) => {
+    controlMessage(5)
+    res.header('Allow', 'GET, PUT, PATCH, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET, PUT, PATCH, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 })
 
-function controlMessage() {
-    console.log("Controlebericht!")
+function controlMessage(a) {
+    console.log("Dit is controlebericht " + a + "!")
 }
 
 module.exports = router
