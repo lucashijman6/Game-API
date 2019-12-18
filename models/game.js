@@ -15,8 +15,7 @@ const gameSchema = new mongoose.Schema({
     },
     release: {
         type: String,
-        required: true,
-        default: Date.now
+        required: true
     }
 })
 
