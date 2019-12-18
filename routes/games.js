@@ -89,7 +89,7 @@ router.put('/:id', getGame, async (req, res, next) => {
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-        return res.json({ message: "Values can't be empty!"})
+        return res.status(400).json({ message: "Values can't be empty!"})
     }
     try {
         const updatedGame = await res.game.save()
