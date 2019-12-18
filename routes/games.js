@@ -51,27 +51,25 @@ router.get('/:id', getGame, (req, res, next) => {
         }
     }
     res.status(200).json(collection)
-    res.writeHead(200, headers)
-    res.send()
 })
 
 router.post('/', async (req, res, next) => {
-    let headers = {}
-    headers[''] = ''
-    const game = new Game({
-        name: req.body.name,
-        company: req.body.company,
-        console: req.body.console,
-        release: req.body.release
-    })
-    try {
-        const newGame = await game.save()
-        res.status(201).json(newGame)
-    } catch (err) {
-        return res.status(400).json({message: err.message})
+    if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
+        const game = new Game({
+            name: req.body.name,
+            company: req.body.company,
+            console: req.body.console,
+            release: req.body.release
+        })
+        try {
+            const newGame = await game.save()
+            res.status(201).json(newGame)
+        } catch (err) {
+            return res.status(400).json({message: err.message})
+        }
+    } else {
+        return res.status(400).json({ message: "Values can't be empty!"})
     }
-    res.writeHead(200, headers)
-    res.send()
 })
 
 router.put('/:id', getGame, async (req, res, next) => {
