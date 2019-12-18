@@ -3,7 +3,6 @@ const router = express.Router()
 const Game = require('../models/game')
 
 router.get('/', async (req, res, next) => {
-    let headers = {}
     res.header('Allow', 'GET, POST, OPTIONS')
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -40,7 +39,6 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:id', getGame, (req, res, next) => {
-    let headers = {}
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     let collection = {
@@ -83,19 +81,28 @@ router.put('/:id', getGame, async (req, res, next) => {
     } else {
         return res.status(406).json({ message: "Content-Type header niet ok!" })
     }
-    if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
+    if (
+        req.body.name != "" &&
+        req.body.company != "" &&
+        req.body.console != "" &&
+        req.body.release != "" &&
+        req.body.name != null &&
+        req.body.company != null &&
+        req.body.console != null &&
+        req.body.release != null
+    ) {
         res.game.name = req.body.name
         res.game.company = req.body.company
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-        return res.status(400).json({ message: "Values can't be empty!"})
+        return res.json({ message: "Values can't be empty!"})
     }
     try {
         const updatedGame = await res.game.save()
         res.status(200).json(updatedGame)
     } catch (err) {
-        return res.status(400).json({ message: err.message })
+        res.status(400).json({ message: err.message })
     }
 })
 

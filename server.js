@@ -11,7 +11,8 @@ db.on('error', (error) => console.error(error))
 db.once('open', () => console.error('Connected to database!'))
 
 app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
+mongoose.set('useFindAndModify', false)
 
 const gamesRouter = require('./routes/games')
 app.use('/games', gamesRouter)
