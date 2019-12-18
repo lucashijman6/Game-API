@@ -35,7 +35,7 @@ router.get('/', async (req, res, next) => {
         }
         res.status(200).json(collection)
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        return res.status(500).json({ message: err.message })
     }
 })
 
@@ -68,7 +68,7 @@ router.post('/', async (req, res, next) => {
         const newGame = await game.save()
         res.status(201).json(newGame)
     } catch (err) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
     }
     res.writeHead(200, headers)
     res.send()
@@ -77,29 +77,27 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', getGame, async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    if(req.header('Accept') === "application/json") {
+    } else {
+        return res.status(406).json({ message: "Accept header niet ok!" })
+    }
+    if(req.header('Content-Type') === "application/json") {
+    } else {
+        return res.status(406).json({ message: "Content-Type header niet ok!" })
+    }
     if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
         res.game.name = req.body.name
         res.game.company = req.body.company
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-        res.json({ message: "Values can't be empty!"})
+        return res.json({ message: "Values can't be empty!"})
     }
     try {
         const updatedGame = await res.game.save()
         res.status(200).json(updatedGame)
     } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
-    if(req.header('Accept') === "application/json") {
-        next()
-    } else {
-        return { message: "Accept header niet ok!" }
-    }
-    if(req.header('Content-Type') === "application/json") {
-        next()
-    } else {
-        return { message: "Content-Type header niet ok!" }
+        return res.status(400).json({ message: err.message })
     }
 })
 
@@ -108,7 +106,7 @@ router.delete('/:id', getGame, async (req, res, next) => {
         await res.game.remove()
         res.status(204).json({ message: 'Game verwijderd!' })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        return res.status(500).json({ message: err.message })
     }
 })
 
