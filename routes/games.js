@@ -41,14 +41,23 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', getGame, (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-    let collection = {
-        item: res.game,
+    let _id = res.game._id
+    let name = res.game.name
+    let company = res.game.company
+    let console = res.game.console
+    let release = res.game.release
+    let singleGame = {
+        _id,
+        name,
+        company,
+        console,
+        release,
         _links: {
             self: {href: "http://" + req.headers.host + "/games/" + res.game._id},
             collection: {href: "http://" + req.headers.host + "/games"}
         }
     }
-    res.status(200).json(collection)
+    res.status(200).json(singleGame)
 })
 
 router.post('/', async (req, res, next) => {
@@ -91,17 +100,22 @@ router.put('/:id', getGame, async (req, res, next) => {
         req.body.console != null &&
         req.body.release != null
     ) {
+        controlMessage(1)
         res.game.name = req.body.name
         res.game.company = req.body.company
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-        return res.json({ message: "Values can't be empty!"})
+        controlMessage(2)
+        return res.status(400).json({ message: "Values can't be empty!"})
     }
     try {
+        controlMessage(3)
         const updatedGame = await res.game.save()
+        controlMessage(4)
         res.status(200).json(updatedGame)
     } catch (err) {
+        controlMessage(5)
         res.status(400).json({ message: err.message })
     }
 })
