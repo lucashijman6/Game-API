@@ -2,7 +2,87 @@ const express = require('express')
 const router = express.Router()
 const Game = require('../models/game')
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
+
+    let start = parseInt(req.query.start)
+    let limit = parseInt(req.query.limit)
+    const numItems = await Game.countDocuments();
+    let numPages = Math.ceil(numItems/limit);
+    
+    if (!start){
+        start = 1;
+    }
+    if (!limit){
+        limit = numItems;
+    }
+    if (start > numPages){
+        start = numPages;
+    }
+    if (limit > numItems){
+        limit = numItems;
+    }
+    if(!numPages){
+        numPages = 1
+    }
+    const index = start - 1;
+    const games = await Game.find().skip(limit * index).limit(limit);
+
+    let items = []
+    for (let i = 0; i < games.length; i++) {
+        let game = await games[i].toJSON()
+        game._links = {
+            "self": {
+                "href":"http://" + req.headers.host + "/games/" + game._id
+            },
+            "collection": {
+                "href":"http://" + req.headers.host + "/games"
+            }
+        }
+        items.push(game)
+    }
+
+    fixedPrevious = start - 1
+    if(fixedPrevious < 1) {
+        fixedPrevious = 1
+    }
+    let fixedNext = start + 1
+    if(fixedNext > numPages){
+        fixedNext = start
+    }
+
+    let collection = {
+        "items": items,
+        "_links": {
+            "self": {
+                "href": "http://" + req.headers.host + "/games"
+            }
+        },
+        "pagination": {
+            "currentPage": start,
+            "currentItems": limit,
+            "totalPages": numPages,
+            "totalItems": numItems,
+            "_links":{
+                "first": {
+                    "page": 1,
+                    "href": "http://" + req.headers.host + "/games?page=1&limit=" + limit
+                },
+                "last": {
+                    "page": numPages,
+                    "href": "http://" + req.headers.host + "/games?page=" + numPages + "&limit=" + limit
+                },
+                "previous": {
+                    "page": fixedPrevious,
+                    "href": "http://" + req.headers.host + "/games?page=" + (fixedPrevious) + "&limit=" + limit
+                },
+                "next": {
+                    "page": fixedNext,
+                    "href": "http://" + req.headers.host + "/games?page=" + (fixedNext) + "&limit=" + limit
+                }
+            }
+        }
+    }
+
     res.header('Allow', 'GET, POST, OPTIONS')
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -14,28 +94,7 @@ router.get('/', async (req, res, next) => {
     } else {
         return res.status(406).json({ message: "Dit formaat is niet toegestaan."})
     }
-    try {
-        const games = await Game.find()
-        let items = []
-        for (let i = 0; i < games.length; i++) {
-            let game = games[i].toJSON()
-            game._links = {
-                self: {href: "http://" + req.headers.host + "/games/" + game._id},
-                collection: {href: "http://" + req.headers.host + "/games"}
-            }
-            items.push(game)
-        }
-        let collection = {
-            items: items,
-            _links: {
-                self: {href: "http://" + req.headers.host + "/games"}
-            },
-            pagination: {geen: "pagination"}
-        }
-        res.status(200).json(collection)
-    } catch (err) {
-        return res.status(500).json({ message: err.message })
-    }
+    res.json(collection)
 })
 
 router.get('/:id', getGame, (req, res, next) => {
