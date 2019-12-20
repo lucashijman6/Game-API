@@ -65,19 +65,19 @@ router.get('/', async (req, res) => {
             "_links":{
                 "first": {
                     "page": 1,
-                    "href": "http://" + req.headers.host + "/games?page=1&limit=" + limit
+                    "href": "http://" + req.headers.host + "/games?start=1&limit=" + limit
                 },
                 "last": {
                     "page": numPages,
-                    "href": "http://" + req.headers.host + "/games?page=" + numPages + "&limit=" + limit
+                    "href": "http://" + req.headers.host + "/games?start=" + numPages + "&limit=" + limit
                 },
                 "previous": {
                     "page": fixedPrevious,
-                    "href": "http://" + req.headers.host + "/games?page=" + (fixedPrevious) + "&limit=" + limit
+                    "href": "http://" + req.headers.host + "/games?start=" + (fixedPrevious) + "&limit=" + limit
                 },
                 "next": {
                     "page": fixedNext,
-                    "href": "http://" + req.headers.host + "/games?page=" + (fixedNext) + "&limit=" + limit
+                    "href": "http://" + req.headers.host + "/games?start=" + (fixedNext) + "&limit=" + limit
                 }
             }
         }
