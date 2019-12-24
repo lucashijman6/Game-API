@@ -6,23 +6,23 @@ router.get('/', async (req, res) => {
 
     let start = parseInt(req.query.start)
     let limit = parseInt(req.query.limit)
-    const numItems = await Game.countDocuments();
-    let numPages = Math.ceil(numItems/limit);
+    const totalItems = await Game.countDocuments();
+    let totalPages = Math.ceil(totalItems/limit);
     
     if (!start){
         start = 1;
     }
     if (!limit){
-        limit = numItems;
+        limit = totalItems;
     }
-    if (start > numPages){
-        start = numPages;
+    if (start > totalPages){
+        start = totalPages;
     }
-    if (limit > numItems){
-        limit = numItems;
+    if (limit > totalItems){
+        limit = totalItems;
     }
-    if(!numPages){
-        numPages = 1
+    if(!totalPages){
+        totalPages = 1
     }
     const index = start - 1;
     const games = await Game.find().skip(limit * index).limit(limit);
@@ -60,16 +60,16 @@ router.get('/', async (req, res) => {
         "pagination": {
             "currentPage": start,
             "currentItems": limit,
-            "totalPages": numPages,
-            "totalItems": numItems,
+            "totalPages": totalPages,
+            "totalItems": totalItems,
             "_links":{
                 "first": {
                     "page": 1,
                     "href": "http://" + req.headers.host + "/games?start=1&limit=" + limit
                 },
                 "last": {
-                    "page": numPages,
-                    "href": "http://" + req.headers.host + "/games?start=" + numPages + "&limit=" + limit
+                    "page": totalPages,
+                    "href": "http://" + req.headers.host + "/games?start=" + totalPages + "&limit=" + limit
                 },
                 "previous": {
                     "page": fixedPrevious,
@@ -97,7 +97,7 @@ router.get('/', async (req, res) => {
     res.json(collection)
 })
 
-router.get('/:id', getGame, (req, res, next) => {
+router.get('/:id', getGame, (req, res) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     let _id = res.game._id
@@ -119,7 +119,7 @@ router.get('/:id', getGame, (req, res, next) => {
     res.status(200).json(singleGame)
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
     if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
         const game = new Game({
             name: req.body.name,
