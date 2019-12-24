@@ -24,8 +24,8 @@ router.get('/', async (req, res) => {
     if(!totalPages){
         totalPages = 1
     }
-    const index = start - 1;
-    const games = await Game.find().skip(limit * index).limit(limit);
+
+    const games = await Game.find().skip(limit * (start - 1)).limit(limit);
 
     let items = []
     for (let i = 0; i < games.length; i++) {
@@ -41,13 +41,13 @@ router.get('/', async (req, res) => {
         items.push(game)
     }
 
-    fixedPrevious = start - 1
-    if(fixedPrevious < 1) {
-        fixedPrevious = 1
+    let previous = start - 1
+    if(previous < 1) {
+        previous = 1
     }
-    let fixedNext = start + 1
-    if(fixedNext > numPages){
-        fixedNext = start
+    let next = start + 1
+    if(next > totalPages){
+        next = start
     }
 
     let collection = {
@@ -72,11 +72,11 @@ router.get('/', async (req, res) => {
                     "href": "http://" + req.headers.host + "/games?start=" + totalPages + "&limit=" + limit
                 },
                 "previous": {
-                    "page": fixedPrevious,
+                    "page": previous,
                     "href": "http://" + req.headers.host + "/games?start=" + (fixedPrevious) + "&limit=" + limit
                 },
                 "next": {
-                    "page": fixedNext,
+                    "page": next,
                     "href": "http://" + req.headers.host + "/games?start=" + (fixedNext) + "&limit=" + limit
                 }
             }
@@ -90,7 +90,6 @@ router.get('/', async (req, res) => {
     if(req.accepts('*/*')) {
         return res.status(406).json({ message: "Dit formaat is niet toegestaan."})
     } else if(req.accepts(['application/json', 'application/x-www-form-urlencoded'])) {
-        console.log("Je hebt het juiste formaat te pakken!")
     } else {
         return res.status(406).json({ message: "Dit formaat is niet toegestaan."})
     }
@@ -149,16 +148,7 @@ router.put('/:id', getGame, async (req, res) => {
     } else {
         return res.status(406).json({ message: "Content-Type header niet ok!" })
     }
-    if (
-        req.body.name != "" &&
-        req.body.company != "" &&
-        req.body.console != "" &&
-        req.body.release != "" &&
-        req.body.name != null &&
-        req.body.company != null &&
-        req.body.console != null &&
-        req.body.release != null
-    ) {
+    if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
         res.game.name = req.body.name
         res.game.company = req.body.company
         res.game.console = req.body.console
