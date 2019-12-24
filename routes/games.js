@@ -138,7 +138,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.put('/:id', getGame, async (req, res, next) => {
+router.put('/:id', getGame, async (req, res) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     if(req.header('Accept') === "application/json") {
@@ -179,7 +179,7 @@ router.put('/:id', getGame, async (req, res, next) => {
     }
 })
 
-router.delete('/:id', getGame, async (req, res, next) => {
+router.delete('/:id', getGame, async (req, res) => {
     try {
         await res.game.remove()
         res.status(204).json({ message: 'Game verwijderd!' })
