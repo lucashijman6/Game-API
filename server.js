@@ -18,7 +18,3 @@ const gamesRouter = require('./routes/games')
 app.use('/games', gamesRouter)
 
 app.listen(8000, () => console.log('Server started!'))
-
-function controlMessage(b) {
-    console.log("Dit bericht checkt plek " + b)
-}

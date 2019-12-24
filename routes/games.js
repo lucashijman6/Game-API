@@ -159,22 +159,17 @@ router.put('/:id', getGame, async (req, res) => {
         req.body.console != null &&
         req.body.release != null
     ) {
-        controlMessage(1)
         res.game.name = req.body.name
         res.game.company = req.body.company
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-        controlMessage(2)
         return res.status(400).json({ message: "Values can't be empty!"})
     }
     try {
-        controlMessage(3)
         const updatedGame = await res.game.save()
-        controlMessage(4)
         res.status(200).json(updatedGame)
     } catch (err) {
-        controlMessage(5)
         res.status(400).json({ message: err.message })
     }
 })
@@ -225,9 +220,5 @@ router.options('/:id', getGame, (req, res) => {
     res.writeHead(200, headers)
     res.send()
 })
-
-function controlMessage(a) {
-    console.log("Dit is controlebericht " + a + "!")
-}
 
 module.exports = router
