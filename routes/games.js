@@ -73,11 +73,11 @@ router.get('/', async (req, res) => {
                 },
                 "previous": {
                     "page": previous,
-                    "href": "http://" + req.headers.host + "/games?start=" + (fixedPrevious) + "&limit=" + limit
+                    "href": "http://" + req.headers.host + "/games?start=" + previous + "&limit=" + limit
                 },
                 "next": {
                     "page": next,
-                    "href": "http://" + req.headers.host + "/games?start=" + (fixedNext) + "&limit=" + limit
+                    "href": "http://" + req.headers.host + "/games?start=" + next + "&limit=" + limit
                 }
             }
         }
@@ -133,7 +133,7 @@ router.post('/', async (req, res) => {
             return res.status(400).json({message: err.message})
         }
     } else {
-        return res.status(400).json({ message: "Values can't be empty!"})
+        return res.status(400).json({ message: "Waarden kunnen niet leeg zijn!"})
     }
 })
 
@@ -154,7 +154,7 @@ router.put('/:id', getGame, async (req, res) => {
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-        return res.status(400).json({ message: "Values can't be empty!"})
+        return res.status(400).json({ message: "Waarden kunnen niet leeg zijn!"})
     }
     try {
         const updatedGame = await res.game.save()
