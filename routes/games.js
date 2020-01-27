@@ -3,7 +3,6 @@ const router = express.Router()
 const Game = require('../models/game')
 
 router.get('/', async (req, res) => {
-
     let start = parseInt(req.query.start)
     let limit = parseInt(req.query.limit)
     const totalItems = await Game.countDocuments();
