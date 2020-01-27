@@ -25,7 +25,6 @@ router.get('/', async (req, res) => {
     }
 
     const games = await Game.find().skip(limit * (start - 1)).limit(limit);
-
     let items = []
     for (let i = 0; i < games.length; i++) {
         let game = await games[i].toJSON()
