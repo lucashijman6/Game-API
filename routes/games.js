@@ -72,21 +72,12 @@ router.get('/', async (req, res) => {
                     "href": "http://" + req.headers.host + "/games?start=" + numPages + "&limit=" + limit
                 },
                 "previous": {
-<<<<<<< Updated upstream
-                    "page": fixedPrevious,
-                    "href": "http://" + req.headers.host + "/games?start=" + (fixedPrevious) + "&limit=" + limit
-                },
-                "next": {
-                    "page": fixedNext,
-                    "href": "http://" + req.headers.host + "/games?start=" + (fixedNext) + "&limit=" + limit
-=======
                     "page": previous,
                     "href": "http://" + req.headers.host + "/games?start=" + previous + "&limit=" + limit
                 },
                 "next": {
                     "page": next,
                     "href": "http://" + req.headers.host + "/games?start=" + next + "&limit=" + limit
->>>>>>> Stashed changes
                 }
             }
         }
@@ -174,12 +165,7 @@ router.put('/:id', getGame, async (req, res, next) => {
         res.game.console = req.body.console
         res.game.release = req.body.release
     } else {
-<<<<<<< Updated upstream
-        controlMessage(2)
-        return res.status(400).json({ message: "Values can't be empty!"})
-=======
         return res.status(400).json({ message: "Waarden kunnen niet leeg zijn!"})
->>>>>>> Stashed changes
     }
     try {
         controlMessage(3)
