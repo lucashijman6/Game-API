@@ -117,6 +117,8 @@ router.get('/:id', getGame, (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     if (req.body.name != "" && req.body.company != "" && req.body.console != "" && req.body.release != "" && req.body.name != null && req.body.company != null && req.body.console != null && req.body.release != null) {
         const game = new Game({
             name: req.body.name,
@@ -163,6 +165,8 @@ router.put('/:id', getGame, async (req, res) => {
 })
 
 router.delete('/:id', getGame, async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     try {
         await res.game.remove()
         res.status(204).json({ message: 'Game verwijderd!' })
@@ -172,6 +176,8 @@ router.delete('/:id', getGame, async (req, res) => {
 })
 
 async function getGame(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     let game
     try {
         game = await Game.findById(req.params.id)
