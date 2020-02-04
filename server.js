@@ -17,4 +17,4 @@ mongoose.set('useFindAndModify', false)
 const gamesRouter = require('./routes/games')
 app.use('/games', gamesRouter)
 
-app.listen(8000, () => console.log('Server started!'))
+app.listen(8001, () => console.log('Server started!'))
